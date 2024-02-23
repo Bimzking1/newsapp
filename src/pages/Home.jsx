@@ -256,7 +256,7 @@ const Home = () => {
               <>
                 {
                   isServer ?
-                  <div className='h-full w-full xl:w-[1280px] flex flex-col justify-center items-center my-64'>
+                  <div className='h-full w-full xl:w-[1280px] flex flex-col justify-center items-center my-64 text-center'>
                     <div className='font-bold text-xl mb-8'>
                       Requests from the browser are not allowed on the Developer plan, except from localhost.
                     </div>
