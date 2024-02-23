@@ -177,7 +177,7 @@ const Home = () => {
   return (
     <div  className='w-full flex flex-col items-center bg-[#F9F9F9]'>  
         <Navbar className=''/>
-        <div className='h-full w-full xl:w-[1280px] flex items-center gap-2 mt-4 mb-2'>
+        <div className='h-full w-full xl:w-[1280px] flex items-center gap-2 mt-4 mb-2 px-2 xl:px-0'>
           <div className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
             <div className='w-[24px] h-[24px]'>
               <MdHistory className='w-full h-full'/>
@@ -229,11 +229,11 @@ const Home = () => {
                     {
                       articles.map((article, index) => {
                         return (
-                          <a href={`${article.url}`} target="_blank" key={index} className='w-[280px] h-full rounded-lg shadow-lg hover:shadow-2xl duration-300 bg-white'>
+                          <a href={`${article.url}`} target="_blank" key={index} className='w-[300px] md:w-[280px] h-full rounded-lg shadow-lg hover:shadow-2xl duration-300 bg-white'>
                             <div className='flex justify-center items-center overflow-hidden rounded-t-lg'>
                               <img
                                 src={((article.urlToImage == null) || (article.urlToImage) == "[Removed]") ? None : article.urlToImage}
-                                className='h-full w-auto rounded-t-lg border-b-2 max-w-[280px] hover:brightness-75 hover:scale-125 duration-700'
+                                className='h-full w-auto rounded-t-lg border-b-2 max-w-[300px] md:max-w-[280px] hover:brightness-75 hover:scale-125 duration-700'
                               />
                             </div>
                             <div className='py-2 px-4 flex flex-col rounded-b-lg'>
@@ -257,9 +257,6 @@ const Home = () => {
                               <div className='mt-2 text-red-500 font-semibold text-sm italic'>
                                 {((article.source.name == null) || (article.source.name == "[Removed]")) ? "Source Removed" : article.source.name}
                               </div>
-                              {/* <div className='mt-4 h-full flex items-end text-blue-700'>
-                                Read more...
-                              </div> */}
                             </div>
                           </a>
                         )
@@ -272,11 +269,11 @@ const Home = () => {
           }
         </div>
         <div className='h-full w-full xl:w-[1280px] mb-8 flex flex-col'>
-          <div className='mb-2'>
+          <div className='w-full mb-2 flex justify-center'>
             News Shown
           </div>
-          <div className='flex justify-between'>
-            <div className='h-full w-full'>
+          <div className='w-full flex flex-col justify-center items-center gap-4'>
+            <div className='h-full w-full flex justify-center items-center'>
               <div className='flex gap-2'>
                 <div onClick={() => handleSetPageSize(4)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 4 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   4
