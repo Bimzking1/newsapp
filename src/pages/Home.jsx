@@ -16,6 +16,7 @@ import DateConvert from '../components/DateConvert';
 
 import { CiSaveDown2 } from "react-icons/ci";
 import { MdHistory } from "react-icons/md";
+import { FaGithub } from "react-icons/fa";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,6 +34,7 @@ const Home = () => {
   const [language, setLanguage] = useState('en')
   const [country, setCountry] = useState('us')
   const [category, setCategory] = useState('general')
+  const [isServer, setIsServer] = useState(false)
 
   useEffect(() => {
     let config = {
@@ -46,6 +48,10 @@ const Home = () => {
       setData(response.data)
     })
     .catch((error) => {
+      if (error.response.status == 426) {
+        setIsServer(true)
+        alert("Requests from the browser are not allowed on the Developer plan, except from localhost. Newsapi hanya bisa digunakan melalui localhost. Netlify dan Vercel tidak bisa menjalankan API dari newsapi.org.")
+      }
       toast.error(error, {
           position: "top-center",
           autoClose: 5000,
@@ -164,7 +170,7 @@ const Home = () => {
     <div  className='w-full flex flex-col items-center bg-[#F9F9F9]'>  
       <div id="home"></div>
         <Navbar className=''/>
-        <div className='h-full w-full xl:w-[1280px] flex justify-center md:justify-normal items-center gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+        <div className='h-full w-full xl:w-[1280px] flex justify-normal items-center gap-2 mt-4 mb-2 px-2 xl:px-0 md:px-4'>
           <Link to="/recent" className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
             <div className='w-[24px] h-[24px]'>
               <MdHistory className='w-full h-full'/>
@@ -247,18 +253,43 @@ const Home = () => {
         <div className='w-full xl:w-[1280px] flex flex-col items-center bg-[#F9F9F9] mb-4'>
           {
             ((data == null) || (loading == true)) ?
-              <div className='flex flex-col justify-center items-center'>
-                <div className='h-full w-full place-items-center py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                  <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
-                </div>
-              </div>
+              <>
+                {
+                  isServer ?
+                  <div className='h-full w-full xl:w-[1280px] flex flex-col justify-center items-center my-64'>
+                    <div className='font-bold text-xl mb-8'>
+                      Requests from the browser are not allowed on the Developer plan, except from localhost.
+                    </div>
+                    <div className='mb-8'>
+                      Newsapi hanya bisa digunakan melalui localhost. Netlify dan Vercel tidak bisa menjalankan API dari newsapi.org.
+                    </div>
+                    <div className='mb-8'>
+                      Jalankan melalui localhost.
+                    </div>
+                    <a href='https://github.com/Bimzking1/newsapp' target="_blank" className='flex gap-4 py-4 px-8 justify-center items-center bg-[#D0EAFA] rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
+                      <div className='w-[40px] h-[40px]'>
+                        <FaGithub className='w-full h-full'/>
+                      </div>
+                      <div className='font-bold text-xl'>
+                        Link Github
+                      </div>
+                    </a>
+                  </div>
+                  :
+                  <div className='flex flex-col justify-center items-center'>
+                    <div className='h-full w-full place-items-center py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                      <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
+                    </div>
+                  </div> 
+                }
+              </>
               :
               <>
                 {
