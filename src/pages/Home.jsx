@@ -1,54 +1,68 @@
-// import React from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import React from 'react'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useRef } from 'react';
+
+import axios from 'axios';
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import DateConvert from '../components/DateConvert';
-
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import None from '../assets/none.jpg'
 import Nothing from '../assets/nothing.svg'
+import DateConvert from '../components/DateConvert';
+
 import { CiSaveDown2 } from "react-icons/ci";
 import { MdHistory } from "react-icons/md";
 
-import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
 
+  const ref = useRef(null);
   const [data, setData] = useState(null)
   const [pageSize, setPageSize] = useState(12)
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
-
-  // useEffect(() => {
-  //   let config = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: `https://newsapi.org/v2/top-headlines?country=us&pageSize=${pageSize}&page=${page}&apiKey=82e7cf4414764da6a8451e4000acefcf`,
-  //   };
   
-  //   axios.request(config)
-  //   .then((response) => {
-  //     console.log('responz: ', response);
-  //     setData(response.data)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-    
-  //   setTimeout(() => {
-  //     setLoading(false)
-  //   }, 2000);
-  // }, [page, pageSize])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQueryData, setSearchQueryData] = useState(null)
+  const [language, setLanguage] = useState('en')
+  const [country, setCountry] = useState('us')
+  const [category, setCategory] = useState('general')
 
   useEffect(() => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://newsapi.org/v2/top-headlines?pageSize=${pageSize}&page=${page}&country=${country}&category=${category}&language=${language}&apiKey=82e7cf4414764da6a8451e4000acefcf`,
+    };
+  
+    axios.request(config)
+    .then((response) => {
+      setData(response.data)
+    })
+    .catch((error) => {
+      toast.error(error, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+      });
+      console.log(error);
+    });
+    
     setTimeout(() => {
       setLoading(false)
     }, 2000);
-  }, [page, pageSize])
+  }, [page, pageSize, category, country, language])
 
   const handleSetPageSize = (pageValue) => {
     setLoading(true)
@@ -65,8 +79,6 @@ const Home = () => {
     setLoading(true)
     setPage(page+1)
   }
-
-  console.log('data: ', data);
 
   const handleAddNewArray = (newsImage, newsTitle, newsUrl, newsAuthor, newsDescription, newsSource, newsPublished) => {
     let savedNews = JSON.parse(localStorage.getItem('savedNews'));
@@ -101,117 +113,52 @@ const Home = () => {
       savedNews.push(newObj)
     
       localStorage.setItem('savedNews', JSON.stringify(savedNews));
-  
-      console.log('news LS: ', JSON.parse(localStorage.getItem('savedNews')))
     }
   }
 
-  const articles = [
-    {
-      source: {
-        id: "abc-news",
-        name: "ABC News"
-      },
-        author: "Aaron Katersky, Peter Charalambous",
-        title: "Letitia James says she's prepared to seize Trump's buildings if he can't pay his $354M civil fraud fine - ABC News",
-        description: "The New York attorney general made the remarks in an interview with ABC News.",
-        url: "https://abcnews.go.com/US/letitia-james-shes-prepared-seize-trumps-assets-pay/story?id=107381482",
-        urlToImage: "https://i.abcnewsfe.com/a/f358c2a2-6ff1-4954-9a5b-c5ff66d3bfc3/James-file-2-gty-ml-240220_1708457880152_hpMain_16x9.jpg?w=1600",
-        publishedAt: "2024-02-21T12:03:31Z",
-        content: "Four days after a judge ordered former President Donald Trump to pay $354 million in his civil fraud case, New York Attorney General Letitia James told ABC News that she is prepared to seize the form… [+2240 chars]"
-      },
-      {
-      source: {
-        id: null,
-        name: "BBC News"
-      },
-        author: null,
-        title: "Gaza ceasefire vote: Commons debate descends into chaos - BBC.com",
-        description: "Speaker Sir Lindsay Hoyle apologises after being accused of allowing the debate to be \"hijacked\" by Labour.",
-        url: "https://www.bbc.com/news/uk-politics-68362405",
-        urlToImage: "https://ichef.bbci.co.uk/news/1024/branded_news/E1FA/production/_132705875_microsoftteams-image.png",
-        publishedAt: "2024-02-22T03:03:32Z",
-        content: "By Becky MortonPolitical reporter\r\nWatch: Chaos in the Commons over Gaza ceasefire vote\r\nA Commons debate on calls for a ceasefire in Gaza descended into chaos, after the Speaker was accused of allow… [+5183 chars]"
-      },
-      {
-      source: {
-        id: "the-verge",
-        name: "The Verge"
-      },
-        author: "Allison Johnson",
-        title: "The Samsung Galaxy S23 series will get AI features in late March - The Verge",
-        description: "Samsung’s Galaxy S23 series, along with its latest foldables and tablets, will get new AI features soon by way of a One UI 6.1 update.",
-        url: "https://www.theverge.com/2024/2/21/24079508/samsung-galaxy-s23-ai-one-ui-6-1",
-        urlToImage: "https://cdn.vox-cdn.com/thumbor/_NreMGywwx_06OSCp5MKw-du1-8=/0x0:2000x1333/1200x628/filters:focal(1000x667:1001x668)/cdn.vox-cdn.com/uploads/chorus_asset/file/25230411/DSC06337_processed.jpg",
-        publishedAt: "2024-02-22T03:00:00Z",
-        content: "The Samsung Galaxy S23 series will get AI features in late March\r\nThe Samsung Galaxy S23 series will get AI features in late March\r\n / One UI 6.1 is coming soon to recent Galaxy phones, foldables, an… [+1678 chars]"
-      },
-      {
-      source: {
-        id: "cnn",
-        name: "CNN"
-      },
-        author: "Alli Rosenbloom",
-        title: "Josh Brolin’s hilarious ‘Dune: Part Two’ movie summary, decoded - CNN",
-        description: "Josh Brolin is known as a doting father and movie star of epic proportions, but above all, the man is a gifted wordsmith.",
-        url: "https://www.cnn.com/2024/02/21/entertainment/josh-brolin-dune-part-two-movie-summary/index.html",
-        urlToImage: "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2013755735.jpg?c=16x9&q=w_800,c_fill",
-        publishedAt: "2024-02-22T02:47:00Z",
-        content: "Josh Brolin is known as a doting father and movie star of epic proportions, but above all, the man is a gifted wordsmith.\r\nBrolin who plays Gurney Halleck in the Denis Villeneuve Dune movies took a m… [+2860 chars]"
-      },
-      {
-      source: {
-        id: null,
-        name: "[Removed]"
-      },
-        author: null,
-        title: "[Removed]",
-        description: "[Removed]",
-        url: "https://removed.com",
-        urlToImage: null,
-        publishedAt: "1970-01-01T00:00:00Z",
-        content: "[Removed]"
-      },
-      {
-      source: {
-        id: "business-insider",
-        name: "Business Insider"
-      },
-        author: "Matthew Fox",
-        title: "An Nvidia earnings blowout could actually be bad news for the stock, JPMorgan says - Yahoo Finance",
-        description: "\"Soooo, bad is bad, good is fine/bad, but too good might be not good,\" JPMorgan said of Nvidia's upcoming earnings report.",
-        url: "https://markets.businessinsider.com/news/stocks/nvidia-q4-earnings-blowout-bad-news-nvda-stock-price-outlook-2024-2",
-        urlToImage: "https://s.yimg.com/ny/api/res/1.2/uWAnPioPseCKpwI4D8tjQQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD05MDA-/https://media.zenfs.com/en/business_insider_articles_888/281a6b31144fff9514c35f06d8aba419",
-        publishedAt: "2024-02-22T01:57:00Z",
-        content: "<ul><li>Investor expectations for Nvidia's upcoming earnings report are sky-high.\r\n</li><li>JPMorgan said Nvidia's stock price could negatively react to a blowout earnings report.\r\n</li><li>\"The bigg… [+2097 chars]"
-      },
-      {
-      source: {
-        id: null,
-        name: "BBC News"
-      },
-        author: null,
-        title: "Major Alabama hospital pauses IVF after court rules frozen embryos are children - BBC.com",
-        description: "The case in Alabama stems from a lawsuit brought by three couples whose frozen embryos were lost at a clinic.",
-        url: "https://www.bbc.com/news/world-us-canada-68366337",
-        urlToImage: "https://ichef.bbci.co.uk/news/1024/branded_news/140A0/production/_132708028_gettyimages-1498980269.jpg",
-        publishedAt: "2024-02-22T01:33:25Z",
-        content: "In vitro fertilization is a common form of fertility care in the US.\r\nA ruling from the Alabama Supreme Court that frozen embryos are considered children, and that a person could be held liable for a… [+7138 chars]"
-      },
-      {
-      source: {
-        id: "cnn",
-        name: "CNN"
-      },
-        author: "Michelle Watson",
-        title: "Arizona prosecutor refuses to extradite suspect in New York killing, citing Manhattan DA’s handling of previous cases - CNN",
-        description: "A suspect in the killing of a woman at a New York City hotel – who was arrested in Arizona in connection with a different case – will not be extradited, Maricopa County Attorney Rachel Mitchell said Wednesday, citing the handling of other cases by Manhattan p…",
-        url: "https://www.cnn.com/2024/02/21/us/arizona-prosecutor-refuses-extradition-soho-killing-case/index.html",
-        urlToImage: "https://media.cnn.com/api/v1/images/stellar/prod/61fa0be6234e47c3a2fa087a3e4.jpg?c=16x9&q=w_800,c_fill",
-        publishedAt: "2024-02-22T01:05:00Z",
-        content: "A suspect in the killing of a woman at a New York City hotel who was arrested in Arizona in connection with a different case will not be extradited, Maricopa County Attorney Rachel Mitchell said Wedn… [+4395 chars]"
-      },
-  ]
+  const handleSearchQuery = () => {
+    setLoading(true)
+    if (searchQuery != ''){
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://newsapi.org/v2/everything?q=${searchQuery}&language=${language}&pageSize=${pageSize}&page=${page}&apiKey=82e7cf4414764da6a8451e4000acefcf`,
+      };
+    
+      axios.request(config)
+      .then((response) => {
+        setSearchQueryData(response.data)
+        setData(response.data)
+        setTimeout(() => {
+          setLoading(false)
+        }, 2000);
+      })
+      .catch((error) => {
+        toast.error(error, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+      });
+    }
+  }
+
+  const handleLanguage = (event) => {
+    setLanguage(event.currentTarget.value)
+  }
+
+  const handleCountry = (event) => {
+    setCountry(event.currentTarget.value)
+  }
+
+  const handleCategory = (event) => {
+    setCategory(event.currentTarget.value)
+  }
 
   return (
     <div  className='w-full flex flex-col items-center bg-[#F9F9F9]'>  
@@ -227,9 +174,79 @@ const Home = () => {
             </div>
           </Link>
         </div>
+        <div className='h-full w-full xl:w-[1280px] px-2 flex flex-col md:flex-row justify-center md:justify-normal items-center gap-4 mt-4 mb-2 xl:px-0 md:px-4'>
+          <input
+              className="text-gray-800 text-md bg-gray-200 w-full py-2 pl-4 md:px-8 rounded-xl font-semibold"
+              type="search"
+              placeholder="Search by keyword..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button onClick={() => handleSearchQuery()} className='bg-[#D0EAFA] w-full md:w-[150px] py-2 px-8 font-semibold rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
+            Search
+          </button>
+        </div>
+        <div className='h-full w-full xl:w-[1280px] px-2 xl:px-0 lg:flex xl:gap-4'>
+          <div className='h-full w-full xl:w-[1280px] flex flex-col justify-start items-start gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+            <div className='font-semibold'>
+              Search by Category
+            </div>
+            <div className='w-full h-[40px] rounded-lg'>
+              <select onChange={handleCategory} className='w-full h-full pl-2 rounded-lg hover:bg-[#D0EAFA] duration-700'>
+                <option defaultValue ref={ref} value={'general'}>General</option>
+                <option ref={ref} value={'business'}>Business</option>
+                <option ref={ref} value={'entertainment'}>Entertainment</option>
+                <option ref={ref} value={'health'}>Health</option>
+                <option ref={ref} value={'science'}>Science</option>
+                <option ref={ref} value={'sports'}>Sports</option>
+                <option ref={ref} value={'technology'}>Technology</option>
+              </select>
+            </div>
+          </div>
+          <div className='h-full w-full xl:w-[1280px] flex flex-col justify-start items-start gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+            <div className='font-semibold'>
+              Search by Country
+            </div>
+            <div className='w-full h-[40px] rounded-lg'>
+              <select onChange={handleCountry} className='w-full h-full pl-2 rounded-lg hover:bg-[#D0EAFA] duration-700'>
+                <option defaultValue ref={ref} value={'us'}>United States</option>
+                <option ref={ref} value={'br'}>Brazil</option>
+                <option ref={ref} value={'ca'}>Canada</option>
+                <option ref={ref} value={'cn'}>China</option>
+                <option ref={ref} value={'gb'}>England</option>
+                <option ref={ref} value={'de'}>Germany</option>
+                <option ref={ref} value={'fr'}>France</option>
+                <option ref={ref} value={'id'}>Indonesia</option>
+                <option ref={ref} value={'in'}>India</option>
+                <option ref={ref} value={'it'}>Italy</option>
+                <option ref={ref} value={'jp'}>Japan</option>
+                <option ref={ref} value={'nl'}>Netherlands</option>
+                <option ref={ref} value={'ru'}>Russia</option>
+                <option ref={ref} value={'sg'}>Singapore</option>
+              </select>
+            </div>
+          </div>
+          <div className='h-full w-full xl:w-[1280px] flex flex-col justify-start items-start gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+            <div className='font-semibold'>
+              News Language
+            </div>
+            <div className='w-full h-[40px] rounded-lg'>
+              <select onChange={handleLanguage} className='w-full h-full pl-2 rounded-lg hover:bg-[#D0EAFA] duration-700'>
+                <option defaultValue ref={ref} value={'en'}>English</option>
+                <option ref={ref} value={'it'}>Italian</option>
+                <option ref={ref} value={'es'}>Español</option>
+                <option ref={ref} value={'pt'}>Portuguese</option>
+                <option ref={ref} value={'de'}>Deutsch</option>
+                <option ref={ref} value={'nl'}>Dutch</option>
+                <option ref={ref} value={'fr'}>French</option>
+                <option ref={ref} value={'ar'}>Arabic</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div className='w-full xl:w-[1280px] flex flex-col items-center bg-[#F9F9F9] mb-4'>
           {
-            ((data != null) || (loading == true)) ?
+            ((data == null) || (loading == true)) ?
               <div className='flex flex-col justify-center items-center'>
                 <div className='h-full w-full place-items-center py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
                   <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
@@ -245,7 +262,7 @@ const Home = () => {
               :
               <>
                 {
-                  (articles.length == 0) ?
+                  (data.articles.length == 0) ?
                   <div className='w-[400px] h-[400px] flex flex-col justify-center items-center mb-4'>
                     <img
                       src={Nothing}
@@ -259,7 +276,7 @@ const Home = () => {
                   <div className='flex flex-col justify-center items-center'>
                     <div className='h-full w-full place-items-center py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
                     {
-                      articles.map((article, index) => {
+                      data.articles.map((article, index) => {
                         return (
                           <a onClick={() => handleAddNewArray(article.urlToImage, article.title, article.url, article.author, article.description, article.source.name, article.publishedAt)} href={`${article.url}`} target="_blank" key={index} className='relative w-[300px] md:w-[280px] h-full rounded-lg shadow-lg hover:shadow-2xl duration-300 bg-white'>
                             <div className='z-50 absolute top-[10px] right-[10px] opacity-75 bg-white shadow hover:bg-[#D0EAFA] duration-700 rounded-sm w-[35px] h-[35px] flex justify-center items-center'>
@@ -340,6 +357,7 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <ToastContainer />
         <Footer className=''/>
     </div>
   )

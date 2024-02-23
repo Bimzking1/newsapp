@@ -1,18 +1,22 @@
 import React from 'react'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import DateConvert from '../components/DateConvert';
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-
-import { useEffect, useState } from 'react';
-import DateConvert from '../components/DateConvert';
-
 import None from '../assets/none.jpg'
 import Nothing from '../assets/nothing.svg'
-import { MdOutlineArrowBackIos } from "react-icons/md";
 
-import { Link } from 'react-router-dom';
+import { MdOutlineArrowBackIos } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const Recent = () => {
 
@@ -26,28 +30,53 @@ const Recent = () => {
     }, 2000);
   }, [])
 
-  console.log('savedNews ', savedNews)
+  const clearHistory = () => {
+    localStorage.clear()
+    toast.success('History deleted successfully!', {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
+    setTimeout(() => {
+      window.location.reload()
+    }, 2000);
+  }
 
   return (
     <div  className='w-full flex flex-col items-center bg-[#F9F9F9]'>  
       <div id="home"></div>
         <Navbar className=''/>
-        <div className='h-full w-full xl:w-[1280px] flex justify-center md:justify-normal items-center gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
-          <Link to="/" className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
-            <div className='w-[24px] h-[24px]'>
-              <MdOutlineArrowBackIos className='w-full h-full'/>
+        <div className='h-full w-full xl:w-[1280px] flex justify-center md:justify-between items-center gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+          <div className='flex justify-center items-center'>
+            <Link to="/" className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
+              <div className='w-[24px] h-[24px]'>
+                <MdOutlineArrowBackIos className='w-full h-full'/>
+              </div>
+              <div className='font-semibold'>
+                Back
+              </div>
+            </Link>
+            <div className='font-semibold ml-4 text-xl'>
+              Read History
             </div>
-            <div className='font-semibold'>
-              Back
-            </div>
-          </Link>
-          <div className='font-semibold ml-4 text-xl'>
-            Read History
           </div>
+          <button onClick={() => clearHistory()} className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
+            <div className='w-[24px] h-[24px]'>
+              <RiDeleteBin6Line className='w-full h-full'/>
+            </div>
+            <div>
+              Clear History
+            </div>
+          </button>
         </div>
         <div className='w-full xl:w-[1280px] flex flex-col items-center bg-[#F9F9F9] mb-4'>
           {
-            ((savedNews == null) || (loading == true)) ?
+            (loading == true) ?
               <div className='flex flex-col justify-center items-center'>
                 <div className='h-full w-full place-items-center py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
                   <Skeleton height={'280px'} width={'280px'} className='rounded-2xl' />
@@ -63,8 +92,8 @@ const Recent = () => {
               :
               <>
                 {
-                  (savedNews.length == 0) ?
-                  <div className='w-[400px] h-[400px] flex flex-col justify-center items-center mb-4'>
+                  (savedNews == null) ?
+                  <div className='w-[400px] h-full flex flex-col justify-center items-center mb-8'>
                     <img
                       src={Nothing}
                       className='w-full h-full'
@@ -118,6 +147,7 @@ const Recent = () => {
               </>
           }
         </div>
+        <ToastContainer />
         <Footer className=''/>
     </div>
   )
