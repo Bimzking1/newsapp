@@ -67,6 +67,45 @@ const Home = () => {
   }
 
   console.log('data: ', data);
+
+  const handleAddNewArray = (newsImage, newsTitle, newsUrl, newsAuthor, newsDescription, newsSource, newsPublished) => {
+    let savedNews = JSON.parse(localStorage.getItem('savedNews'));
+
+    if (savedNews == null) {
+      savedNews = [
+        {
+          id: 1,
+          newsImage: newsImage,
+          newsTitle: newsTitle,
+          newsUrl: newsUrl,
+          newsAuthor: newsAuthor,
+          newsDescription: newsDescription,
+          newsSource: newsSource,
+          newsPublished: newsPublished,
+        }
+      ]
+      localStorage.setItem('savedNews', JSON.stringify(savedNews));
+    } else {
+      const newObj = 
+        {
+          id: savedNews.length+1,
+          newsImage: newsImage,
+          newsTitle: newsTitle,
+          newsUrl: newsUrl,
+          newsAuthor: newsAuthor,
+          newsDescription: newsDescription,
+          newsSource: newsSource,
+          newsPublished: newsPublished,
+        }
+  
+      savedNews.push(newObj)
+    
+      localStorage.setItem('savedNews', JSON.stringify(savedNews));
+  
+      console.log('news LS: ', JSON.parse(localStorage.getItem('savedNews')))
+    }
+  }
+
   const articles = [
     {
       source: {
@@ -176,24 +215,17 @@ const Home = () => {
 
   return (
     <div  className='w-full flex flex-col items-center bg-[#F9F9F9]'>  
+      <div id="home"></div>
         <Navbar className=''/>
-        <div className='h-full w-full xl:w-[1280px] flex items-center gap-2 mt-4 mb-2 px-2 xl:px-0'>
-          <div className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
+        <div className='h-full w-full xl:w-[1280px] flex justify-center md:justify-normal items-center gap-2 mt-4 mb-2 xl:px-0 md:px-4'>
+          <Link to="/recent" className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
             <div className='w-[24px] h-[24px]'>
               <MdHistory className='w-full h-full'/>
             </div>
             <div className='font-semibold'>
-              Recently Read
+              Read History
             </div>
-          </div>
-          <div className='flex justify-center items-center gap-2 bg-[#D0EAFA] py-2 px-4 rounded-xl text-[#005D8C] hover:bg-[#005D8C] duration-300 hover:text-[#D0EAFA]'>
-            <div className='w-[24px] h-[24px]'>
-              <CiSaveDown2 className='w-full h-full'/>
-            </div>
-            <div className='font-semibold'>
-              Saved
-            </div>
-          </div>
+          </Link>
         </div>
         <div className='w-full xl:w-[1280px] flex flex-col items-center bg-[#F9F9F9] mb-4'>
           {
@@ -225,11 +257,14 @@ const Home = () => {
                   </div>
                   :
                   <div className='flex flex-col justify-center items-center'>
-                    <div className='h-full w-full place-items-center py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
+                    <div className='h-full w-full place-items-center py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
                     {
                       articles.map((article, index) => {
                         return (
-                          <a href={`${article.url}`} target="_blank" key={index} className='w-[300px] md:w-[280px] h-full rounded-lg shadow-lg hover:shadow-2xl duration-300 bg-white'>
+                          <a onClick={() => handleAddNewArray(article.urlToImage, article.title, article.url, article.author, article.description, article.source.name, article.publishedAt)} href={`${article.url}`} target="_blank" key={index} className='relative w-[300px] md:w-[280px] h-full rounded-lg shadow-lg hover:shadow-2xl duration-300 bg-white'>
+                            <div className='z-50 absolute top-[10px] right-[10px] opacity-75 bg-white shadow hover:bg-[#D0EAFA] duration-700 rounded-sm w-[35px] h-[35px] flex justify-center items-center'>
+                              <CiSaveDown2 className='w-[25px] h-[25px]'/>
+                            </div>
                             <div className='flex justify-center items-center overflow-hidden rounded-t-lg'>
                               <img
                                 src={((article.urlToImage == null) || (article.urlToImage) == "[Removed]") ? None : article.urlToImage}
@@ -241,12 +276,12 @@ const Home = () => {
                                 {((article.title == null) || (article.title == "[Removed]")) ? "Title Removed" : article.title.slice(0, 70) + '...'}
                               </div>
                               <div className='text-sm my-4'>
-                                {((article.description == null) || (article.description == "[Removed]")) ? "Description Removed" : article.description.length <= 100 ? article.description : article.description.slice(0, 100) + '...'}
+                                {((article.description == null) || (article.description == "[Removed]")) ? "Description Removed" : article.description.length <= 100 ? article.description : article.description.slice(0, 150) + '...'}
                               </div>
-                              <div>
+                              <div className='text-sm'>
                                 {((article.publishedAt == null) || (article.publishedAt == "[Removed]")) ? "Date Removed" : <DateConvert day={article.publishedAt}/>}
                               </div>
-                              <div className='border-t-2 mt-2 flex flex-col'>
+                              <div className='border-t-2 mt-2 flex flex-col text-sm'>
                                 <div className='text-gray-500 mt-2 font-semibold'>
                                   Author
                                 </div>
@@ -268,12 +303,12 @@ const Home = () => {
               </>
           }
         </div>
-        <div className='h-full w-full xl:w-[1280px] mb-8 flex flex-col'>
-          <div className='w-full mb-2 flex justify-center'>
+        <div className='h-full w-full xl:w-[1280px] mb-8 flex flex-col md:px-8 xl:px-0'>
+          <div className='w-full mb-2 flex justify-center md:justify-start'>
             News Shown
           </div>
-          <div className='w-full flex flex-col justify-center items-center gap-4'>
-            <div className='h-full w-full flex justify-center items-center'>
+          <div className='w-full flex flex-col md:flex-row justify-center items-center gap-4'>
+            <div className='h-full w-full flex justify-center items-center md:justify-between'>
               <div className='flex gap-2'>
                 <div onClick={() => handleSetPageSize(4)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 4 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   4
