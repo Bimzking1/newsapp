@@ -14,10 +14,11 @@ const Footer = () => {
                 <a href="#home" className='w-4/5'>
                     <img
                         src={Logo}
+                        className='rounded-lg'
                     />
                 </a>
                 <div className='text-lg md:text-sm my-8 px-4 md:px-0 lg:w-4/5'>
-                    DNA is the largest news publisher company
+                    World News is the largest news publisher company
                     and service providers in Indonesia.
                     We help our customers to fullfilled their
                     satisfaction.
@@ -90,7 +91,7 @@ const Footer = () => {
         <hr className='mt-8'/>
         <div className='text-center md:flex gap-8 text-xs mt-8 lg:px-4'>
             <div className='mb-2'>
-                © Bimo - DNA 2024. All Rights Reserved
+                © Bimo - World News 2024. All Rights Reserved
             </div>
             <div className='font-bold mb-2 hidden md:block'>
                 About Us

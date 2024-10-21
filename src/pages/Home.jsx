@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRef } from 'react';
@@ -30,7 +29,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchQueryData, setSearchQueryData] = useState(null)
   const [language, setLanguage] = useState('en')
   const [country, setCountry] = useState('us')
   const [category, setCategory] = useState('general')
@@ -133,7 +131,6 @@ const Home = () => {
     
       axios.request(config)
       .then((response) => {
-        setSearchQueryData(response.data)
         setData(response.data)
         setTimeout(() => {
           setLoading(false)
@@ -358,31 +355,31 @@ const Home = () => {
           <div className='w-full flex flex-col md:flex-row justify-center items-center gap-4'>
             <div className='h-full w-full flex justify-center items-center md:justify-between'>
               <div className='flex gap-2'>
-                <div onClick={() => handleSetPageSize(4)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 4 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
+                <div onClick={() => handleSetPageSize(4)} className={`w-[40px] h-[40px] flex justify-center items-center cursor-pointer ${pageSize == 4 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   4
                 </div>
-                <div onClick={() => handleSetPageSize(8)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 8 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
+                <div onClick={() => handleSetPageSize(8)} className={`w-[40px] h-[40px] flex justify-center items-center cursor-pointer ${pageSize == 8 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   8
                 </div>
-                <div onClick={() => handleSetPageSize(12)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 12 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
+                <div onClick={() => handleSetPageSize(12)} className={`w-[40px] h-[40px] flex justify-center items-center cursor-pointer ${pageSize == 12 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   12
                 </div>
-                <div onClick={() => handleSetPageSize(16)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 16 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
+                <div onClick={() => handleSetPageSize(16)} className={`w-[40px] h-[40px] flex justify-center items-center cursor-pointer ${pageSize == 16 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   16
                 </div>
-                <div onClick={() => handleSetPageSize(20)} className={`w-[40px] h-[40px] flex justify-center items-center ${pageSize == 20 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
+                <div onClick={() => handleSetPageSize(20)} className={`w-[40px] h-[40px] flex justify-center items-center cursor-pointer ${pageSize == 20 ? 'bg-[#005D8C] text-[#D0EAFA]' : 'bg-[#D0EAFA] text-[#005D8C]'} hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold`}>
                   20
                 </div>
               </div>
             </div>
             <div className='flex gap-2'>
-              <div onClick={() => handlePrevPage()} className='py-2 px-8 flex justify-center items-center bg-[#D0EAFA] text-[#005D8C] hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
+              <div onClick={() => handlePrevPage()} className='py-2 px-8 flex justify-center items-center cursor-pointer bg-[#D0EAFA] text-[#005D8C] hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
                 Prev
               </div>
-              <div className='py-2 px-4 flex justify-center items-center bg-[#D0EAFA] text-[#005D8C] hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
+              <div className='py-2 px-4 flex justify-center items-center bg-[#D0EAFA] text-[#005D8C] cursor-pointer hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
                 {page}
               </div>
-              <div onClick={() => handleNextPage()} className='py-2 px-8 flex justify-center items-center bg-[#D0EAFA] text-[#005D8C] hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
+              <div onClick={() => handleNextPage()} className='py-2 px-8 flex justify-center items-center cursor-pointer bg-[#D0EAFA] text-[#005D8C] hover:bg-[#005D8C] hover:text-[#D0EAFA] duration-300 rounded-lg font-semibold'>
                 Next
               </div>
             </div>
